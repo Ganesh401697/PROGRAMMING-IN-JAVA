@@ -1,0 +1,41 @@
+import java.util.Scanner;
+import java.io.*;
+
+public class Task01 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        double balance = 10000;
+
+        try {
+            System.out.print("Enter Account Number: ");
+            int acc = sc.nextInt();
+
+            System.out.print("Enter Withdrawal Amount: ");
+            double amount = sc.nextDouble();
+
+            if (amount <= 0)
+                throw new IllegalArgumentException("Invalid amount");
+
+            if (amount > balance)
+                throw new ArithmeticException("Insufficient balance");
+
+            balance -= amount;
+
+            System.out.println("Withdrawal Successful");
+            System.out.println("Remaining Balance: " + balance);
+
+        } catch (ArithmeticException e) {
+            System.out.println(e.getMessage());
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("Invalid Input");
+
+        } finally {
+            System.out.println("ATM Session Closed");
+            sc.close();
+        }
+    }
+}

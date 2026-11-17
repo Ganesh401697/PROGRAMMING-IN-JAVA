@@ -1,0 +1,38 @@
+public class Task05 {
+    boolean[] booked = new boolean[10];
+    int bookingsMade = 0;
+
+    synchronized void book(int seat) {
+
+        if (!booked[seat]) {
+            booked[seat] = true;
+            bookingsMade++;
+
+            System.out.println("Seat " + seat + " Booked");
+        } else {
+            System.out.println("Seat " + seat + " Already Booked");
+        }
+    }
+
+    public static void main(String[] args)
+            throws InterruptedException {
+
+        Task05 screen = new Task05();
+
+        Thread[] users = new Thread[100];
+
+        for (int i = 0; i < 100; i++) {
+            final int seat = i % 10;
+
+            users[i] = new Thread(() -> screen.book(seat));
+
+            users[i].start();
+        }
+
+        for (Thread t : users) {
+            t.join();
+        }
+
+        System.out.println("Seats sold: " + screen.bookingsMade);
+    }
+}

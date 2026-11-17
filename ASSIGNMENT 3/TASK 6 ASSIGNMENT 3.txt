@@ -1,0 +1,91 @@
+public class Task06 {
+
+    static class TokenCounter {
+        int[] buffer = new int[5];
+
+        int count = 0;
+        int in = 0;
+        int out = 0;
+
+        synchronized void put(int token)
+                throws InterruptedException {
+
+            while (count == 5) {
+                wait();
+            }
+
+            buffer[in] = token;
+            in = (in + 1) % 5;
+            count++;
+
+            notifyAll();
+        }
+
+        synchronized int take()
+                throws InterruptedException {
+
+            while (count == 0) {
+                wait();
+            }
+
+            int token = buffer[out];
+
+            out = (out + 1) % 5;
+            count--;
+
+            notifyAll();
+
+            return token;
+        }
+    }
+
+    public static void main(String[] args)
+            throws InterruptedException {
+
+        TokenCounter counter = new TokenCounter();
+
+        int[] collected = new int[2];
+
+        Thread cook = new Thread(() -> {
+            try {
+                for (int i = 1; i <= 20; i++) {
+                    counter.put(i);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        Thread[] students = new Thread[2];
+
+        for (int i = 0; i < 2; i++) {
+            final int id = i;
+
+            students[i] = new Thread(() -> {
+                try {
+                    for (int j = 0; j < 10; j++) {
+                        collected[id] += counter.take();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        }
+
+        cook.start();
+
+        for (Thread t : students) {
+            t.start();
+        }
+
+        cook.join();
+
+        for (Thread t : students) {
+            t.join();
+        }
+
+        System.out.println("Sum of tokens collected: "
+                + (collected[0] + collected[1])
+                + " (expected 210)");
+    }
+}

@@ -1,0 +1,36 @@
+import java.io.*;
+
+public class Task03 {
+    public static void main(String[] args) {
+
+        try {
+            BufferedWriter w = new BufferedWriter(
+                new FileWriter("report.txt"));
+
+            w.write("Daily Sales Report");
+            w.newLine();
+            w.write("Total Sales: 5000");
+
+            w.close();
+
+            System.out.println("Report Created Successfully");
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Try-with-resources
+        try (BufferedWriter w = new BufferedWriter(
+                new FileWriter("safe-report.txt"))) {
+
+            w.write("Daily Sales Report");
+            w.newLine();
+            w.write("Total Sales: 5000");
+
+            System.out.println("Safe Report Created");
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}

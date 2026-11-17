@@ -1,0 +1,62 @@
+class Station extends Thread {
+    int scripts;
+
+    Station(int scripts) {
+        this.scripts = scripts;
+    }
+
+    public void run() {
+        try {
+            System.out.println(
+                Thread.currentThread().getName() + " Started");
+
+            Thread.sleep(1000);
+
+            System.out.println("Scripts Scanned: " + scripts);
+
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
+    }
+}
+
+class ScannerStation implements Runnable {
+    public void run() {
+        System.out.println("Runnable Thread Started");
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("Runnable Thread Completed");
+    }
+}
+
+public class Task04 {
+    public static void main(String[] args)
+            throws InterruptedException {
+
+        Station s1 = new Station(25);
+        Station s2 = new Station(30);
+
+        Thread s3 = new Thread(new ScannerStation());
+        Thread s4 = new Thread(new ScannerStation());
+
+        s1.start();
+        s2.start();
+        s3.start();
+        s4.start();
+
+        System.out.println("Station 1 Alive: " + s1.isAlive());
+
+        s1.join();
+        s2.join();
+        s3.join();
+        s4.join();
+
+        System.out.println("All Stations Completed");
+        System.out.println("Total Scripts: 110");
+    }
+}

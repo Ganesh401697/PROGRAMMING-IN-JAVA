@@ -1,0 +1,67 @@
+import java.util.*;
+import java.util.concurrent.*;
+import java.io.*;
+
+public class Task07 {
+
+    static class ResultTask implements Callable<Integer> {
+        int marks;
+
+        ResultTask(int marks) {
+            this.marks = marks;
+        }
+
+        public Integer call() throws Exception {
+
+            if (marks < 0 || marks > 100) {
+                throw new Exception("Invalid Marks");
+            }
+
+            return marks;
+        }
+    }
+
+    public static void main(String[] args)
+            throws InterruptedException {
+
+        ExecutorService executor =
+                Executors.newFixedThreadPool(4);
+
+        ConcurrentLinkedQueue<Integer> results =
+                new ConcurrentLinkedQueue<>();
+
+        List<Future<Integer>> futures = new ArrayList<>();
+
+        int[] marks = {80, 75, 90, 65, 85, 110, 70};
+
+        for (int mark : marks) {
+            futures.add(executor.submit(new ResultTask(mark)));
+        }
+
+        int success = 0;
+        int failure = 0;
+        int total = 0;
+
+        for (Future<Integer> future : futures) {
+            try {
+                int result = future.get();
+
+                results.add(result);
+                total += result;
+                success++;
+
+            } catch (ExecutionException e) {
+                System.out.println("File Processing Failed: "
+                        + e.getCause().getMessage());
+
+                failure++;
+            }
+        }
+
+        executor.shutdown();
+
+        System.out.println("\nSuccessful Files: " + success);
+        System.out.println("Failed Files: " + failure);
+        System.out.println("Total Valid Marks: " + total);
+    }
+}
