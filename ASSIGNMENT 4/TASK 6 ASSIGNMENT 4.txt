@@ -1,0 +1,86 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+
+public class EventRegistration extends JFrame {
+
+    JTextField name = new JTextField(10);
+    JTextField reg = new JTextField(10);
+
+    JComboBox<String> event = new JComboBox<>(
+            new String[]{"Dance", "Music", "Sports"});
+
+    DefaultTableModel model = new DefaultTableModel(
+            new String[]{"Name", "Register No", "Event"}, 0);
+
+    JTable table = new JTable(model);
+
+    EventRegistration() {
+        setTitle("Event Registration");
+        setLayout(new BorderLayout());
+
+        JPanel form = new JPanel();
+
+        JButton register = new JButton("Register");
+
+        form.add(new JLabel("Name"));
+        form.add(name);
+
+        form.add(new JLabel("Register No"));
+        form.add(reg);
+
+        form.add(event);
+        form.add(register);
+
+        add(form, BorderLayout.NORTH);
+        add(new JScrollPane(table), BorderLayout.CENTER);
+
+        register.addActionListener(e -> registerStudent());
+
+        JMenuBar bar = new JMenuBar();
+        JMenu menu = new JMenu("File");
+        JMenuItem exit = new JMenuItem("Exit");
+
+        exit.addActionListener(e -> dispose());
+
+        menu.add(exit);
+        bar.add(menu);
+        setJMenuBar(bar);
+
+        setSize(600, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    void registerStudent() {
+        String n = name.getText();
+        String r = reg.getText();
+        String ev = event.getSelectedItem().toString();
+
+        if (n.isEmpty() || r.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Fill all fields");
+            return;
+        }
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (model.getValueAt(i, 1).equals(r)
+                    && model.getValueAt(i, 2).equals(ev)) {
+                JOptionPane.showMessageDialog(this,
+                        "Already Registered");
+                return;
+            }
+        }
+
+        model.addRow(new Object[]{n, r, ev});
+
+        JOptionPane.showMessageDialog(this,
+                "Registration Successful");
+
+        name.setText("");
+        reg.setText("");
+    }
+
+    public static void main(String[] args) {
+        new EventRegistration();
+    }
+}

@@ -1,0 +1,58 @@
+import java.awt.*;
+import java.awt.event.*;
+
+public class LibrarySearch extends Frame {
+
+    TextField search = new TextField(20);
+    Choice category = new Choice();
+    Button searchBtn = new Button("Search");
+    Button prev = new Button("Prev");
+    Button next = new Button("Next");
+    Button reserve = new Button("Reserve");
+    TextArea results = new TextArea();
+    Label status = new Label("Ready");
+
+    LibrarySearch() {
+        setTitle("Library Search");
+
+        setLayout(new BorderLayout());
+
+        Panel top = new Panel(new FlowLayout());
+        category.add("Books");
+        category.add("Authors");
+        category.add("Subjects");
+
+        top.add(search);
+        top.add(category);
+        top.add(searchBtn);
+
+        Panel bottom = new Panel(new FlowLayout());
+        bottom.add(prev);
+        bottom.add(next);
+        bottom.add(reserve);
+
+        add(top, BorderLayout.NORTH);
+        add(results, BorderLayout.CENTER);
+        add(bottom, BorderLayout.SOUTH);
+
+        add(status, BorderLayout.PAGE_END);
+
+        searchBtn.addActionListener(e -> {
+            results.setText("Search Result for: " + search.getText());
+            status.setText("Search completed");
+        });
+
+        setSize(500, 400);
+        setVisible(true);
+
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        new LibrarySearch();
+    }
+}

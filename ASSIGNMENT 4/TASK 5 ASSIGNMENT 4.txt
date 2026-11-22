@@ -1,0 +1,49 @@
+import java.awt.FlowLayout;
+import javax.swing.*;
+
+public class Converter extends JFrame {
+
+    JTextField amount = new JTextField(10);
+    JComboBox<String> target = new JComboBox<>(new String[]{"USD", "EUR"});
+    JLabel result = new JLabel(" ");
+
+    Converter() {
+        setTitle("Currency Converter");
+        setLayout(new FlowLayout());
+
+        JButton convertButton = new JButton("Convert");
+
+        add(new JLabel("INR"));
+        add(amount);
+        add(target);
+        add(convertButton);
+        add(result);
+
+        convertButton.addActionListener(e -> convert());
+        amount.addActionListener(e -> convert());
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        pack();
+        setVisible(true);
+    }
+
+    private void convert() {
+        try {
+            double value = Double.parseDouble(amount.getText());
+
+            double rate = target.getSelectedItem().equals("USD")
+                    ? 0.012 : 0.011;
+
+            double converted = value * rate;
+
+            result.setText(String.format("%.2f", converted));
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Invalid amount");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Converter());
+    }
+}

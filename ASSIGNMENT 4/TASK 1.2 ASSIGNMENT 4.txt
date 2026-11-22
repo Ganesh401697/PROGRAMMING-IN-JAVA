@@ -1,0 +1,67 @@
+import java.awt.*;
+import java.awt.event.*;
+
+class FeeService {
+    boolean pay(String reg, double amount) {
+        if (reg.isEmpty() || amount <= 0)
+            return false;
+        return true;
+    }
+}
+
+public class FeeWindow extends Frame {
+    TextField regNo = new TextField(15);
+    TextField amount = new TextField(15);
+    Button pay = new Button("Pay");
+    Button clear = new Button("Clear");
+    Label result = new Label(" ");
+
+    FeeService service = new FeeService();
+
+    FeeWindow() {
+        setTitle("Fee Payment");
+
+        setLayout(new FlowLayout());
+
+        add(new Label("Register Number:"));
+        add(regNo);
+        add(new Label("Amount:"));
+        add(amount);
+        add(pay);
+        add(clear);
+        add(result);
+
+        pay.addActionListener(e -> {
+            try {
+                double a = Double.parseDouble(amount.getText());
+
+                if (service.pay(regNo.getText(), a))
+                    result.setText("Payment Successful");
+                else
+                    result.setText("Invalid Input");
+
+            } catch (Exception ex) {
+                result.setText("Enter Valid Amount");
+            }
+        });
+
+        clear.addActionListener(e -> {
+            regNo.setText("");
+            amount.setText("");
+            result.setText(" ");
+        });
+
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
+        });
+
+        setSize(350, 250);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new FeeWindow();
+    }
+}
