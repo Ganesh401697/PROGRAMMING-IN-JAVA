@@ -1,0 +1,42 @@
+import java.io.*;
+import java.sql.*;
+
+public class MigrationDemo {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/testdb", "root", "");
+
+        BufferedReader br = new BufferedReader(new FileReader("passes.csv"));
+
+        String line;
+        PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO bus_pass VALUES (?, ?, ?, ?, ?)");
+
+        con.setAutoCommit(false);
+
+        while ((line = br.readLine()) != null) {
+            String[] p = line.split(",", -1);
+
+            if (p.length != 5) {
+                System.out.println("Invalid record: " + line);
+                continue;
+            }
+
+            ps.setString(1, p[0]);
+            ps.setString(2, p[1]);
+            ps.setString(3, p[2]);
+            ps.setInt(4, Integer.parseInt(p[3]));
+            ps.setDouble(5, Double.parseDouble(p[4]));
+
+            ps.addBatch();
+        }
+
+        ps.executeBatch();
+        con.commit();
+
+        System.out.println("Migration completed");
+
+        br.close();
+        con.close();
+    }
+}

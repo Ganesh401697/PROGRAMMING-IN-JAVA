@@ -1,0 +1,19 @@
+import java.util.*;
+
+public class GeneratePasses {
+    public static void main(String[] args) {
+        List<String[]> passes = new ArrayList<>();
+
+        for (int i = 1; i <= 1000; i++) {
+            passes.add(new String[]{
+                "P" + i,
+                "19231" + i,
+                "Student" + i,
+                String.valueOf(i % 20 + 1),
+                "4500"
+            });
+        }
+
+        System.out.println("Total passes: " + passes.size());
+    }
+}

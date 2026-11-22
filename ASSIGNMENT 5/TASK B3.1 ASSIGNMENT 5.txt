@@ -1,0 +1,11 @@
+CREATE DATABASE testdb;
+
+USE testdb;
+
+CREATE TABLE bus_pass (
+    pass_id VARCHAR(20) PRIMARY KEY,
+    reg_no VARCHAR(20),
+    name VARCHAR(50),
+    route_no INT,
+    amount DOUBLE
+);

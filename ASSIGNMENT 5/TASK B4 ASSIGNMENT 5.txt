@@ -1,0 +1,21 @@
+import java.sql.*;
+
+public class DatabaseMetadataDemo {
+    public static void main(String[] args) throws Exception {
+        Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/testdb", "root", "");
+
+        DatabaseMetaData md = con.getMetaData();
+
+        System.out.println("Database: " + md.getDatabaseProductName());
+        System.out.println("Driver: " + md.getDriverVersion());
+
+        ResultSet rs = md.getTables(null, null, "%", new String[]{"TABLE"});
+
+        while (rs.next()) {
+            System.out.println("Table: " + rs.getString("TABLE_NAME"));
+        }
+
+        con.close();
+    }
+}
